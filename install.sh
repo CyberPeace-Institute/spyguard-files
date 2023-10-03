@@ -90,7 +90,7 @@ Description=Spyguard frontend service
 
 [Service]
 Type=simple
-ExecStart=/home/cyberpeace/spyguard-venv/bin/python3 /usr/share/spyguard/server/frontend/main.py
+ExecStart=/home/spyguard/spyguard-venv/bin/python3 /usr/share/spyguard/server/frontend/main.py
 Restart=on-abort
 KillMode=process
 
@@ -105,7 +105,7 @@ Description=Spyguard backend service
 
 [Service]
 Type=simple
-ExecStart=/home/cyberpeace/spyguard-venv/bin/python3 /usr/share/spyguard/server/backend/main.py
+ExecStart=/home/spyguard/spyguard-venv/bin/python3 /usr/share/spyguard/server/backend/main.py
 Restart=on-abort
 KillMode=process
 
@@ -122,7 +122,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/home/cyberpeace/spyguard-venv/bin/python3 /usr/share/spyguard/server/backend/watchers.py
+ExecStart=/home/spyguard/spyguard-venv/bin/python3 /usr/share/spyguard/server/backend/watchers.py
 Restart=on-abort
 KillMode=process
 
@@ -156,11 +156,11 @@ install_package() {
     if [[ $1 == "tshark" || $1 == "sqlite3" || $1 == "suricata" ]]; then
        apt install $1 -y
     elif [[ $1 == "dig" ]]; then
-       apt-get install -y dnsutils
-    elif [[ $1 == "pip" ]]; then
-       apt-get install -y python3-pip
+       apt install -y dnsutils
+    elif [[ $1 == "pip3" ]]; then
+       apt install -y python3-pip
     elif [[ $1 == "arp" ]]; then
-       apt-get install -y net-tools
+       apt install -y net-tools
     fi
 }
 
@@ -171,7 +171,7 @@ check_dependencies() {
          "/usr/bin/dig"
          "/usr/bin/suricata"
          "/usr/bin/sqlite3"
-         "/usr/bin/pip",
+         "/usr/bin/pip3",
          "/usr/sbin/arp")
 
    echo -e "\e[39m[+] Checking dependencies...\e[39m"
@@ -185,7 +185,7 @@ check_dependencies() {
        fi
    done
    echo -e "\e[39m[+] Install Python packages...\e[39m"
-   /home/cyberpeace/spyguard-venv/bin/python3 -m pip install -r "$SCRIPT_PATH/assets/requirements.txt"
+   /home/spyguard/spyguard-venv/bin/python3 -m pip install -r "$SCRIPT_PATH/assets/requirements.txt"
 }
 
 get_version() {
@@ -217,7 +217,7 @@ create_database() {
 
 feeding_iocs() {
     echo -e "\e[39m[+] Feeding your SpyGuard instance with fresh IOCs and whitelist, please wait."
-    /home/cyberpeace/spyguard-venv/bin/python3 /usr/share/spyguard/server/backend/watchers.py 2>/dev/null
+    /home/spyguard/spyguard-venv/bin/python3 /usr/share/spyguard/server/backend/watchers.py 2>/dev/null
 
     # Then, let's activate watchers service
     systemctl start spyguard-watchers
